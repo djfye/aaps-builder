@@ -43,7 +43,6 @@ ENV VERSION=master
 
 # Copy build script
 VOLUME [/home/aaps]
-WORKDIR /home/aaps/apk
 WORKDIR /home/aaps
 COPY build-aaps /usr/bin
 RUN chmod +x /usr/bin/build-aaps
