@@ -137,8 +137,8 @@ echo "Alternatively if it is not possible to access the files using your phone o
 echo ""
 echo "When you have downloaded the apk press ctrl+c to finish."
 
-while true; do
-sleep 60
+for run in {1..5}; do
+    sleep 60
 done
 
 read UNUSED
