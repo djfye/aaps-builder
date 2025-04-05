@@ -42,6 +42,7 @@ ENV KEYSTORE_ALIAS=key0
 ENV VERSION=master
 
 # Copy build script
+RUN mkdir -p /home/aaps/apk
 VOLUME [/home/aaps]
 WORKDIR /home/aaps
 COPY build-aaps /usr/bin
@@ -50,7 +51,6 @@ COPY patches /tmp/patches/
 
 # Setup web server
 RUN rm -rf /var/www/localhost/htdocs
-RUN mkdir /home/aaps/apk
 RUN ln -s -f /home/aaps/apk/ /var/www/localhost/htdocs
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 EXPOSE 8080
