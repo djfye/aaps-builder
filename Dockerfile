@@ -3,6 +3,10 @@ FROM alpine:edge
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 # Install packages
+RUN rm -rf /etc/apk/repositories
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
 RUN apk update
 RUN apk add --no-cache tzdata curl binutils zstd gcompat libstdc++ openjdk23 bash nano git unzip wget apache2
 
