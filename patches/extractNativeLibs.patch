@@ -1,0 +1,24 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index b7815678f..f7fb7ce39 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -380,7 +380,4 @@ printf('--------------\n')
+ printf('isMaster: %s\n', isMaster().toString())
+ printf('allCommited: %s\n', allCommited().toString())
+ printf('--------------\n')
+-if (isMaster() && !allCommited()) {
+-    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+-}
+ 
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index b571e247c..959a4e842 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -31,6 +31,7 @@
+ 
+     <application
+         android:name=".MainApp"
++        android:extractNativeLibs="true"
+         android:allowBackup="true"
+         android:icon="${appIcon}"
+         android:label="@string/app_name"
