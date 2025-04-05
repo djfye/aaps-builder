@@ -108,8 +108,8 @@ for apk in $APK_FILES; do
         exit 1
     fi
 
-    cp "${FILENAME}-signed.apk" "/home/aaps/${FILENAME}-signed-${VERSION}.apk"
-    chmod 777 "/home/aaps/${FILENAME}-signed-${VERSION}.apk"
+    cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
+    chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
 done
 
 echo -e "\tStarting local web server ... \c"
@@ -145,10 +145,10 @@ read UNUSED
 
 while true; do
 
-    FULL_APP='/home/aaps/app-full-release-signed-master.apk'
-    NS_CLIENT='/home/aaps/app-nsclient2-release-signed-master.apk'
-    NS_CLIENT2='/home/aaps/app-nsclient-release-signed-master.apk'
-    PUMP_CONTROL='/home/aaps/app-pumpcontrol-release-signed-master.apk'
+    FULL_APP='/home/aaps/apk/app-full-release-signed-master.apk'
+    NS_CLIENT='/home/aaps/apk/app-nsclient2-release-signed-master.apk'
+    NS_CLIENT2='/home/aaps/apk/app-nsclient-release-signed-master.apk'
+    PUMP_CONTROL='/home/aaps/apk/app-pumpcontrol-release-signed-master.apk'
     printf "########################################################\n"
     printf "# Alternative APK Downloader:                          #\n"
     printf "#   - For users unable to download APKs directly there #\n"
