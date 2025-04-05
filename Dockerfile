@@ -17,6 +17,8 @@ ENV ANDROID_HOME=/opt/sdk
 ENV CMDLINE_VERSION=19.0
 ENV SDK_TOOLS=13114758
 ENV PATH=/usr/lib/jvm/default-jvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/sdk/cmdline-tools/${CMDLINE_VERSION}/bin:/opt/sdk/platform-tools:/opt/sdk/extras/google/instantapps
+ENV WAITTIME=60
+ENV LOOPS=5
 
 # Install android studio components
 RUN rm -rf /tmp/*
@@ -48,6 +50,7 @@ COPY patches /tmp/patches/
 
 # Setup web server
 RUN rm -rf /var/www/localhost/htdocs
+RUN mkdir -p /home/aaps/apk
 RUN ln -s -f /home/aaps/apk/ /var/www/localhost/htdocs
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 EXPOSE 8080
