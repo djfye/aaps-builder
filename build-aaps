@@ -137,7 +137,7 @@ echo "Alternatively if it is not possible to access the files using your phone o
 echo ""
 echo "When you have downloaded the apk press ctrl+c to finish."
 
-for (( c=$SLOOP; c<=ELOOP; c++ ))
+for (( c=$SLOOP; c<=$ELOOP; c++ ))
 do
     sleep $WAITTIME
 done
