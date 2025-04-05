@@ -29,7 +29,7 @@ RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
 RUN sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "platform-tools" "extras;google;instantapps"
 
 # Set keystore data
-COPY ./extras /bin
+COPY extras /bin
 WORKDIR /home/android
 ENV KEYSTORE_FILE=keystore
 ENV KEYSTORE_PASSWORD=AndroidAPS
