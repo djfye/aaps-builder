@@ -17,8 +17,9 @@ ENV ANDROID_HOME=/opt/sdk
 ENV CMDLINE_VERSION=19.0
 ENV SDK_TOOLS=13114758
 ENV PATH=/usr/lib/jvm/default-jvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/sdk/cmdline-tools/${CMDLINE_VERSION}/bin:/opt/sdk/platform-tools:/opt/sdk/extras/google/instantapps
+ENV SLOOP=1
+ENV ELOOP=5
 ENV WAITTIME=60
-ENV LOOPS=5
 
 # Install android studio components
 RUN rm -rf /tmp/*
