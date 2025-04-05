@@ -1,0 +1,206 @@
+#!/bin/sh
+
+BUILD_LOG=/home/aaps/build.log
+
+# Check to see if the keystore file exists
+# If not generate a new one with default settings
+echo -e "\tChecking if keystore exists ... \c"
+if [ ! -e "${KEYSTORE_FILE}" ]; then
+    echo "[failed]"
+    echo -e "\tGenerating a new default keystore ... \c"
+    keytool \
+        -genkey \
+        -v \
+        -keystore "${KEYSTORE_FILE}" \
+        -alias "${KEYSTORE_ALIAS}" \
+        -keyalg RSA \
+        -keysize 2048 \
+        -validity 10000 \
+        -keypass "${KEYSTORE_PASSWORD}" \
+        -storepass "${KEYSTORE_PASSWORD}" \
+        -noprompt \
+        -dname "CN=, OU=, O=AndroidAPS, L=, S=, C=" &> "${BUILD_LOG}"
+
+    if [ -e ${KEYSTORE_FILE} ]; then 
+        echo "[ok]"
+    else
+        echo "[failed]"
+        exit 1
+    fi
+else
+    echo "[ok]"
+fi
+
+cd /tmp || exit
+
+if [ ! -d AndroidAPS ]; then
+    echo -e "\tChecking out AndroidAPS from git ... \c"
+    git clone -b "${VERSION}" --depth 1 https://github.com/nightscout/AndroidAPS &> "${BUILD_LOG}"
+
+	if [ -d AndroidAPS ]; then 
+		echo "[ok]"
+	else
+		echo "[failed]"
+		exit 1
+	fi
+fi
+
+cd AndroidAPS || exit
+
+echo -e "\tApplying Patches ... \c"
+for FILE in $(find ../patches/*.patch)
+do
+    git apply < "${FILE}"
+done
+echo "[ok]"
+
+echo -e "\tBuilding Version ${VERSION} APKs (This may take some time) ... \c"
+./gradlew assembleRelease &> "${BUILD_LOG}"
+if [ -d ./app/build/outputs/ ]; then
+    echo "[ok]"
+else
+    echo "[failed]"
+    exit 1
+fi
+
+
+# Setup APK Tools
+if [ ! -e /usr/bin/zipalign ]; then
+    ln -s "$(find / -name zipalign)" /usr/bin/zipalign
+fi
+if [ ! -e /usr/bin/apksigner ]; then
+    ln -s "$(find / -name apksigner)" /usr/bin/apksigner
+fi
+
+APK_FILES=$(find "$(pwd)/app/build/outputs/" -name '*-release-unsigned.apk')
+
+# Sign all the APKs
+for apk in $APK_FILES; do
+    FILENAME=$(basename "$apk" | cut -d- -f 1-3)
+    if [ -e "${FILENAME}-aligned.apk" ]; then
+        rm "${FILENAME}-aligned.apk"
+    fi
+    if [ -e "${FILENAME}-signed.apk" ]; then
+        rm "${FILENAME}-signed.apk"
+    fi
+
+    echo -e "\tAligning ${FILENAME}.apk ... \c"
+    zipalign -v -p 4 "$apk" "${FILENAME}-aligned.apk" &> "${BUILD_LOG}"
+    if [ -e "${FILENAME}-aligned.apk" ]; then
+        echo "[ok]"
+    else
+        echo "[failed]"
+        exit 1
+    fi
+
+    echo -e "\tSigning ${FILENAME}.apk ... \c"
+    apksigner sign \
+        --ks /home/aaps/"${KEYSTORE_FILE}" \
+        --ks-pass pass:"${KEYSTORE_PASSWORD}" \
+        --key-pass pass:"${KEYSTORE_PASSWORD}" \
+        --out "${FILENAME}"-signed.apk \
+        "${FILENAME}-aligned.apk" &> "${BUILD_LOG}"
+
+    if [ -e "${FILENAME}-signed.apk" ]; then 
+        echo "[ok]"
+    else
+        echo "[failed]"
+        exit 1
+    fi
+
+    cp "${FILENAME}-signed.apk" "/home/aaps/${FILENAME}-signed-${VERSION}.apk"
+    chmod 777 "/home/aaps/${FILENAME}-signed-${VERSION}.apk"
+done
+
+echo -e "\tStarting local web server ... \c"
+httpd -k start &> "${BUILD_LOG}"
+
+if [ $? -eq 0 ]; then
+    echo "[ok]"
+else
+    echo "[failed: ${RESULT}]"
+    exit 1
+fi
+
+echo "-----------------------"
+echo "--- Build Complete ----"
+echo "-----------------------"
+
+MACHINE_IP=$(ifconfig eth0 | grep Mask | awk '{print $2}'| cut -f2 -d:)
+
+echo ""
+echo "Installation Instrcutions:"
+echo "Download app-full-release-signed-${VERSION}.apk and install."
+echo ""
+echo "Visit http://${MACHINE_IP}:8080/ using the phone you wish to install AndroidAPS onto."
+echo "Alternatively if it is not possible to access the files using your phone open the link in a browser on this computer, download the file and transfer to the phone."
+echo ""
+echo "When you have downloaded the apk press ctrl+c to finish."
+
+while true; do
+sleep 60
+done
+
+read UNUSED
+
+while true; do
+
+    FULL_APP='/home/aaps/app-full-release-signed-master.apk'
+    NS_CLIENT='/home/aaps/app-nsclient2-release-signed-master.apk'
+    NS_CLIENT2='/home/aaps/app-nsclient-release-signed-master.apk'
+    PUMP_CONTROL='/home/aaps/app-pumpcontrol-release-signed-master.apk'
+    printf "########################################################\n"
+    printf "# Alternative APK Downloader:                          #\n"
+    printf "#   - For users unable to download APKs directly there #\n"
+    printf "#   - is an alterative online dowload method. Any file #\n"                    #\n"
+    printf "#   - uploads will expire after 24 hours. Please       #\n"
+    printf "#   - ensure to save downloads somewhere safe          #\n"
+    printf "########################################################\n"
+    printf "Please read and select one of following options:\n"
+    printf "  1. Upload AndroidAPS full release APK\n"
+    printf "  2. Upload AndroidAPS nightscout client APK\n"
+    printf "  3. Upload AndroidAPS nightscout2 client APK\n"
+    printf "  4. Upload AndroidAPS pumpcontrol APK\n"
+    printf "  q. Quit (when you have finished  with downloads)\n"
+    printf "Please enter your choice [1-4q]:"
+    read USER_INPUT
+
+    case "${USER_INPUT}" in
+
+       '1')
+            FILE="${FULL_APP}"
+       ;;
+       '2')
+            FILE="${NS_CLIENT}"
+       ;;
+       '3')
+           FILE="${NS_CLIENT2}"
+       ;;
+      '4')
+          FILE="${PUMP_CONTROL}"
+       ;;
+       'q'|'Q')
+           break
+       ;;
+       *)
+       echo "Invald option, enter only one of the following options [1234q]"
+       ;;
+    esac
+
+    if [ ! -z "${FILE}" ]; then
+        echo "${FILE} is now being uploaded..."
+        LINK="$(curl -F file=@${FILE} https://file.io/?expires=1d | jq .link)"
+        if [ ! -z "${LINK}" ]; then
+            printf "########################################################\n"
+            printf "Now download your APK file at ${LINK}\n"
+            printf "########################################################\n"
+            echo "Press [Enter] when ready to continue"
+            read UNUSED
+            clear
+        else
+           echo "Upload of ${FILE} Failed!!"
+        fi
+    fi
+done
+
+exit 0
