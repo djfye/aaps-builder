@@ -137,70 +137,9 @@ echo "Alternatively if it is not possible to access the files using your phone o
 echo ""
 echo "When you have downloaded the apk press ctrl+c to finish."
 
-for run in {1..$LOOPS}; do
+for (( c=$SLOOP; c<=ELOOP; c++ ))
+do
     sleep $WAITTIME
-done
-
-read UNUSED
-
-while true; do
-
-    FULL_APP='/home/aaps/apk/app-full-release-signed-master.apk'
-    NS_CLIENT='/home/aaps/apk/app-nsclient2-release-signed-master.apk'
-    NS_CLIENT2='/home/aaps/apk/app-nsclient-release-signed-master.apk'
-    PUMP_CONTROL='/home/aaps/apk/app-pumpcontrol-release-signed-master.apk'
-    printf "########################################################\n"
-    printf "# Alternative APK Downloader:                          #\n"
-    printf "#   - For users unable to download APKs directly there #\n"
-    printf "#   - is an alterative online dowload method. Any file #\n"                    #\n"
-    printf "#   - uploads will expire after 24 hours. Please       #\n"
-    printf "#   - ensure to save downloads somewhere safe          #\n"
-    printf "########################################################\n"
-    printf "Please read and select one of following options:\n"
-    printf "  1. Upload AndroidAPS full release APK\n"
-    printf "  2. Upload AndroidAPS nightscout client APK\n"
-    printf "  3. Upload AndroidAPS nightscout2 client APK\n"
-    printf "  4. Upload AndroidAPS pumpcontrol APK\n"
-    printf "  q. Quit (when you have finished  with downloads)\n"
-    printf "Please enter your choice [1-4q]:"
-    read USER_INPUT
-
-    case "${USER_INPUT}" in
-
-       '1')
-            FILE="${FULL_APP}"
-       ;;
-       '2')
-            FILE="${NS_CLIENT}"
-       ;;
-       '3')
-           FILE="${NS_CLIENT2}"
-       ;;
-      '4')
-          FILE="${PUMP_CONTROL}"
-       ;;
-       'q'|'Q')
-           break
-       ;;
-       *)
-       echo "Invald option, enter only one of the following options [1234q]"
-       ;;
-    esac
-
-    if [ ! -z "${FILE}" ]; then
-        echo "${FILE} is now being uploaded..."
-        LINK="$(curl -F file=@${FILE} https://file.io/?expires=1d | jq .link)"
-        if [ ! -z "${LINK}" ]; then
-            printf "########################################################\n"
-            printf "Now download your APK file at ${LINK}\n"
-            printf "########################################################\n"
-            echo "Press [Enter] when ready to continue"
-            read UNUSED
-            clear
-        else
-           echo "Upload of ${FILE} Failed!!"
-        fi
-    fi
 done
 
 exit 0
