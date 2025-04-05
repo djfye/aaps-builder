@@ -1,24 +1,24 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index b7815678f..f7fb7ce39 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -380,7 +380,4 @@ printf('--------------\n')
- printf('isMaster: %s\n', isMaster().toString())
- printf('allCommited: %s\n', allCommited().toString())
- printf('--------------\n')
--if (isMaster() && !allCommited()) {
--    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index b7121ae..e377c9b 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -227,7 +227,3 @@ println("-------------------")
+ if (!gitAvailable()) {
+     throw GradleException("GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it")
+ }
+-if (isMaster() && !allCommitted()) {
+-    throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 -}
- 
+-
 diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
-index b571e247c..959a4e842 100644
+index 75ace80..3acac54 100644
 --- a/app/src/main/AndroidManifest.xml
 +++ b/app/src/main/AndroidManifest.xml
-@@ -31,6 +31,7 @@
+@@ -32,6 +32,7 @@
  
      <application
-         android:name=".MainApp"
+         android:name="app.aaps.MainApp"
 +        android:extractNativeLibs="true"
          android:allowBackup="true"
-         android:icon="${appIcon}"
-         android:label="@string/app_name"
+         android:backupAgent="app.aaps.utils.SPBackupAgent"
+         android:fullBackupOnly="false"
