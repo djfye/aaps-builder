@@ -50,7 +50,7 @@ COPY patches /tmp/patches/
 
 # Setup web server
 RUN rm -rf /var/www/localhost/htdocs
-RUN mkdir -p /home/aaps/apk
+RUN mkdir /home/aaps/apk
 RUN ln -s -f /home/aaps/apk/ /var/www/localhost/htdocs
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 EXPOSE 8080
