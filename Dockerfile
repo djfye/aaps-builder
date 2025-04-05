@@ -42,8 +42,8 @@ ENV KEYSTORE_ALIAS=key0
 ENV VERSION=master
 
 # Copy build script
-RUN mkdir -p /home/aaps/apk
 VOLUME [/home/aaps]
+WORKDIR /home/aaps/apk
 WORKDIR /home/aaps
 COPY build-aaps /usr/bin
 RUN chmod +x /usr/bin/build-aaps
