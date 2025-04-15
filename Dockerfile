@@ -20,7 +20,6 @@ ENV PATH=/usr/lib/jvm/default-jvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/
 ENV WAITTIME=60
 ENV PUID=99
 ENV PGID=100
-USER ${PUID}:${PGID}
 
 # Install android studio components
 RUN rm -rf /tmp/*
@@ -57,4 +56,5 @@ RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 EXPOSE 8080
 
 # Run build script
+USER ${PUID}:${PGID}
 ENTRYPOINT build-aaps
