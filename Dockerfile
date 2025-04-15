@@ -20,7 +20,7 @@ ENV PATH=/usr/lib/jvm/default-jvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/
 ENV WAITTIME=60
 ENV PUID=99
 ENV PGID=100
-RUN -u ${PUID}:${PGID}
+USER ${PUID}:${PGID}
 
 # Install android studio components
 RUN rm -rf /tmp/*
