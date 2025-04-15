@@ -33,6 +33,18 @@ fi
 
 cd /tmp || exit
 
+if [ -d AndroidAPS ]; then
+    echo -e "\tDeleting old AndroidAPS ... \c"
+    rm -rf AndroidAPS &> "${BUILD_LOG}"
+
+	if [ ! -d AndroidAPS ]; then 
+		echo "[ok]"
+	else
+		echo "[failed]"
+		exit 1
+	fi
+fi
+
 if [ ! -d AndroidAPS ]; then
     echo -e "\tChecking out AndroidAPS from git ... \c"
     git clone -b "${VERSION}" --depth 1 https://github.com/nightscout/AndroidAPS &> "${BUILD_LOG}"
