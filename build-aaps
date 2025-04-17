@@ -59,7 +59,7 @@ fi
 
 cd AndroidAPS || exit
 
-if [ ! -z "$( ls -A '/tmp/patches' )" ]; then
+if [ ! -z "$( ls '/tmp/patches' )" ]; then
     echo -e "\tApplying Patches ... \c"
 
     for FILE in $(find ../patches/*.patch)
