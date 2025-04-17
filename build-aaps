@@ -124,9 +124,8 @@ for apk in $APK_FILES; do
         exit 1
    fi
 
-    if [ -d /home/aaps/apk ]; then
+    if [ ! -z "$( ls '/home/aaps/apk' )" ]; then
         rm -rf /home/aaps/apk
-        mkdir /home/aaps/apk
     else
         mkdir /home/aaps/apk
     fi
