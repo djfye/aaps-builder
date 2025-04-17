@@ -121,7 +121,7 @@ for apk in $APK_FILES; do
     fi
 
     mkdir /home/aaps/apk
-    ln -s "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
+    cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
     chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
 done
 
