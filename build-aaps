@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 BUILD_LOG=/home/aaps/build.log
 
@@ -35,7 +35,7 @@ cd /tmp || exit
 
 if [ -d AndroidAPS ]; then
     echo -e "\tDeleting old AndroidAPS ... \c"
-    rm -rf /tmp/*!(patches) &> "${BUILD_LOG}"
+    find . -type d ! -name patches -delete &> "${BUILD_LOG}"
 
 	if [ ! -d AndroidAPS ]; then 
 		echo "[ok]"
