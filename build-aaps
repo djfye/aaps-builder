@@ -35,7 +35,7 @@ cd /tmp || exit
 
 if [ -d AndroidAPS ]; then
     echo -e "\tDeleting old AndroidAPS ... \c"
-    find . -type d ! -name patches -delete &> "${BUILD_LOG}"
+     rm -rf AndroidAPS &> "${BUILD_LOG}"
 
 	if [ ! -d AndroidAPS ]; then 
 		echo "[ok]"
@@ -59,12 +59,16 @@ fi
 
 cd AndroidAPS || exit
 
-echo -e "\tApplying Patches ... \c"
-for FILE in $(find ../patches/*.patch)
-do
-    git apply < "${FILE}"
-done
-echo "[ok]"
+if [ ! -z "$( ls -A '/tmp/patches' )" ]; then
+    echo -e "\tApplying Patches ... \c"
+
+    for FILE in $(find ../patches/*.patch)
+    do
+        git apply < "${FILE}"
+    done
+
+    echo "[ok]"
+fi
 
 echo -e "\tBuilding Version ${VERSION} APKs (This may take some time) ... \c"
 ./gradlew assembleRelease &> "${BUILD_LOG}"
