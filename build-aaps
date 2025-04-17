@@ -125,10 +125,6 @@ for apk in $APK_FILES; do
     chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
 done
 
-mkdir /home/aaps/apk
-cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
-chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
-
 echo -e "\tStarting local web server ... \c"
 httpd -k start &> "${BUILD_LOG}"
 
