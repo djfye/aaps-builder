@@ -57,6 +57,14 @@ if [ ! -d AndroidAPS ]; then
 	fi
 fi
 
+if [ ! -d /home/aaps/apk ]; then
+    mkdir /home/aaps/apk
+fi
+
+if [ ! -z "$( ls '/home/aaps/apk' )" ]; then
+    rm -rf /home/aaps/apk/*
+fi
+
 cd AndroidAPS || exit
 
 if [ ! -z "$( ls '/tmp/patches' )" ]; then
@@ -124,16 +132,7 @@ for apk in $APK_FILES; do
         exit 1
     fi
 
-    if [ ! -d /home/aaps/apk ]; then
-        mkdir /home/aaps/apk
-    fi
-
-    if [ ! -z "$( ls '/home/aaps/apk' )" ]; then
-        rm -rf /home/aaps/apk/*
-    fi
-
     cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
-    sleep 15s
     chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
 done
 
