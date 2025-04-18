@@ -46,11 +46,27 @@ if [ -d AndroidAPS ]; then
 fi
 
 if [ ! -d /home/aaps/apk ]; then
+    echo -e "\tCreating output Directory ... \c"
     mkdir /home/aaps/apk
+	
+        if [ -d /home/aaps/apk ]; then
+		echo "[ok]"
+	else
+		echo "[failed]"
+		exit 1
+	fi
 fi
 
 if [ ! -z "$( ls '/home/aaps/apk' )" ]; then
+    echo -e "\tDeleting old apk files ... \c"
     rm -rf /home/aaps/apk/*
+        
+        if [ -z "$( ls '/home/aaps/apk' )" ]; then
+		echo "[ok]"
+	else
+		echo "[failed]"
+		exit 1
+	fi
 fi
 
 if [ ! -d AndroidAPS ]; then
