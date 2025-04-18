@@ -133,6 +133,7 @@ for apk in $APK_FILES; do
     fi
 
     cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
+    sleep 15s
     chmod 777 "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
 done
 
