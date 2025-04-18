@@ -117,17 +117,19 @@ for apk in $APK_FILES; do
         --out "${FILENAME}"-signed.apk \
         "${FILENAME}-aligned.apk" &> "${BUILD_LOG}"
 
-    if [ -e "${FILENAME}-signed.apk" ]; then 
+    if [ -e "${FILENAME}-signed.apk" ]; then
         echo "[ok]"
     else
         echo "[failed]"
         exit 1
-   fi
+    fi
+
+    if [ ! -d /home/aaps/apk ]; then
+        mkdir /home/aaps/apk
+    fi
 
     if [ ! -z "$( ls '/home/aaps/apk' )" ]; then
-        rm -rf /home/aaps/apk
-    else
-        mkdir /home/aaps/apk
+        rm -rf /home/aaps/apk/*
     fi
 
     cp "${FILENAME}-signed.apk" "/home/aaps/apk/${FILENAME}-signed-${VERSION}.apk"
